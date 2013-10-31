@@ -13,7 +13,7 @@ function TargetBuilder(name) {
 	this.commands = [];
 }
 
-TargetBuilder.prototype.indentation = '  ';
+TargetBuilder.prototype.indentation = '\t';
 
 TargetBuilder.prototype.depend = function (dependency) {
 	this.dependencies.push(dependency);
