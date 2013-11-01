@@ -57,7 +57,7 @@ TargetBuilder.prototype.formatCommand = function (command) {
 		return arg.line
 	})
 
-	var formattedCommand = command.command + ' ' + valueargs.join(' ') + lineargs.join(' ');
+	var formattedCommand = command.executable + ' ' + valueargs.join(' ') + lineargs.join(' ');
 	if (command.outputproperty) {
 		formattedCommand = command.outputproperty + '=' + '`' + formattedCommand +  '`'
 	}
