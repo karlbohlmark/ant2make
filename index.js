@@ -30,7 +30,7 @@ TargetBuilder.prototype.toString = function () {
 	str += '\n';
 	
 	this.commands.forEach(function (command) {
-		str += this.formatCommand(command);
+		str += this.formatCommand(command) + '\n';
 	}.bind(this));
 
 	return str;
