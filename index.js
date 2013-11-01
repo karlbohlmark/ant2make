@@ -20,8 +20,8 @@ TargetBuilder.prototype.depend = function (dependency) {
 	return this;
 };
 
-TargetBuilder.prototype.exec = function (executable, valueArgs, lineArgs) {
-	this.commands.push({ command: executable, valueArgs: valueArgs, lineArgs: lineArgs });
+TargetBuilder.prototype.exec = function (exec) {
+	this.commands.push(exec);
 	return this;
 };
 
@@ -41,7 +41,24 @@ TargetBuilder.prototype.formatDependencies = function () {
 };
 
 TargetBuilder.prototype.formatCommand = function (command) {
-	return this.indentation + command.command + ' ' + command.valueArgs.join(' ') + command.lineArgs.join(' ');
+	var valueargs = args.filter(function (arg) {
+		return 'value' in arg;
+	}).map(function (arg) {
+		return arg.value;
+	})
+	
+	var lineargs = args.filter(function (arg) {
+		return 'line' in arg;
+	}).map(function (arg) {
+		return arg.line
+	})
+
+	var formattedCommand = command.command + ' ' + valueargs.join(' ') + lineargs.join(' ');
+	if (command.outputproperty) {
+		formattedCommand = command.outputproperty '=' + '`' + formattedCommand +  '`'
+	}
+
+	return this.indentation + formattedCommand
 };
 
 function makeTarget(antTarget) {
@@ -68,19 +85,7 @@ function visitExec(builder, target) {
 	if (target.exec) {
 		var execs = Array.isArray(target.exec) ? target.exec : [target.exec];
 		execs.forEach(function (exec) {
-			var args = arr(exec.arg);
-			var valueargs = args.filter(function (arg) {
-					return 'value' in arg;
-				})
-				.map(function (arg) { return arg.value; })
-			var lineargs = args.filter(function (arg) {
-				return 'line' in arg;
-			}).map(function (arg) {
-				return arg.line
-			})
-
-			
-			builder.exec(exec.executable, valueargs, lineargs);
+			builder.exec(exec);
 		});
 	}
 }
