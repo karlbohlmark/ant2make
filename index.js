@@ -20,8 +20,8 @@ TargetBuilder.prototype.depend = function (dependency) {
 	return this;
 };
 
-TargetBuilder.prototype.exec = function (executable, args) {
-	this.commands.push({ command: executable, args: args });
+TargetBuilder.prototype.exec = function (executable, valueArgs, lineArgs) {
+	this.commands.push({ command: executable, valueArgs: valueArgs, lineArgs: lineArgs });
 	return this;
 };
 
@@ -41,7 +41,7 @@ TargetBuilder.prototype.formatDependencies = function () {
 };
 
 TargetBuilder.prototype.formatCommand = function (command) {
-	return this.indentation + command.command + ' ' + command.args.join(' ');
+	return this.indentation + command.command + ' ' + command.valueArgs.join(' ') + command.lineArgs.join(' ');
 };
 
 function makeTarget(antTarget) {
@@ -69,7 +69,18 @@ function visitExec(builder, target) {
 		var execs = Array.isArray(target.exec) ? target.exec : [target.exec];
 		execs.forEach(function (exec) {
 			var args = arr(exec.arg);
-			builder.exec(exec.executable, args.map(function (arg) { return arg.value; }));
+			var valueargs = args.filter(function (arg) {
+					return 'value' in arg;
+				})
+				.map(function (arg) { return arg.value; })
+			var lineargs = args.filter(function (arg) {
+				return 'line' in arg;
+			}).map(function (arg) {
+				return arg.line
+			})
+
+			
+			builder.exec(exec.executable, valueargs, lineargs);
 		});
 	}
 }
