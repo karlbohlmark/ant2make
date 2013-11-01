@@ -41,6 +41,11 @@ TargetBuilder.prototype.formatDependencies = function () {
 };
 
 TargetBuilder.prototype.formatCommand = function (command) {
+	console.log(command)
+	var args = command.arg
+	if (!Array.isArray(args)) {
+		args = [command.arg]
+	}
 	var valueargs = args.filter(function (arg) {
 		return 'value' in arg;
 	}).map(function (arg) {
@@ -55,7 +60,7 @@ TargetBuilder.prototype.formatCommand = function (command) {
 
 	var formattedCommand = command.command + ' ' + valueargs.join(' ') + lineargs.join(' ');
 	if (command.outputproperty) {
-		formattedCommand = command.outputproperty '=' + '`' + formattedCommand +  '`'
+		formattedCommand = command.outputproperty + '=' + '`' + formattedCommand +  '`'
 	}
 
 	return this.indentation + formattedCommand
