@@ -41,7 +41,6 @@ TargetBuilder.prototype.formatDependencies = function () {
 };
 
 TargetBuilder.prototype.formatCommand = function (command) {
-	console.log(command)
 	var args = command.arg
 	if (!Array.isArray(args)) {
 		args = [command.arg]
